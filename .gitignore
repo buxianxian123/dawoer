@@ -1,0 +1,80 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Node.js ###
+node_modules/
+package-lock.json
+yarn.lock
+
+### Frontend Build ###
+frontend/dist/
+frontend/build/
+
+### Logs ###
+*.log
+hs_err_pid*.log
+replay_pid*.log
+
+### Database ###
+*.db
+data/
+
+### OS Files ###
+.DS_Store
+Thumbs.db
+*.tmp
+
+### IDE Files ###
+*.swp
+*.swo
+*~
+
+### Backend Build ###
+*.jar
+target/
+
+### Documents (不要上传) ###
+221002104*.doc
+221002104*.docx
+221002104*.pdf
+毕业设计*.txt
+毕业设计*.docx
+~$*.doc
+
+### Gradle ###
+gradle-8.5-bin.zip
