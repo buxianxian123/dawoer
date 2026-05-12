@@ -37,7 +37,9 @@ const App: React.FC = () => {
       </main>
 
       <footer className="app-footer">
-        <span>达斡尔族传统音乐数字化与传播实践 · 学术研究项目演示站点</span>
+        <span>达斡尔族传统音乐数字化资源库 · 采集-入库-转化-审核-传播-验证</span>
+        <br />
+        <span>基于 Spring Boot + PostgreSQL + MinIO 构建 · 学术研究项目</span>
       </footer>
     </div>
   )

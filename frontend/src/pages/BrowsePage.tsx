@@ -4,6 +4,14 @@ import { Category, Media } from '../types'
 import { fetchJson } from '../services/api'
 import MediaCover from '../components/MediaCover'
 
+const typeLabels: Record<string, string> = {
+  AUDIO: '音频',
+  VIDEO: '视频',
+  IMAGE: '图片',
+  DOCUMENT: '文档',
+  LINK: '外部链接',
+}
+
 const BrowsePage: React.FC = () => {
   const [categoryGroups, setCategoryGroups] = useState<Record<string, Category[]>>({})
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([])
@@ -20,7 +28,6 @@ const BrowsePage: React.FC = () => {
         return
       }
 
-      // 按父分类分组
       const groups: Record<string, Category[]> = {}
       data.forEach(c => {
         if (c.parent && typeof c.parent === 'object') {
@@ -32,7 +39,6 @@ const BrowsePage: React.FC = () => {
         }
       })
 
-      // 对每个组内的分类排序
       Object.keys(groups).forEach(key => {
         groups[key].sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'))
       })
@@ -66,7 +72,6 @@ const BrowsePage: React.FC = () => {
 
   useEffect(() => {
     loadMedia(0)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategoryIds])
 
   const handleSearch = (e: React.FormEvent) => {
@@ -87,6 +92,15 @@ const BrowsePage: React.FC = () => {
   const clearFilters = () => {
     setSelectedCategoryIds([])
     setKeyword('')
+  }
+
+  const getGenreFromMedia = (m: Media): string | null => {
+    const categories = (m as any).categories
+    if (!categories || !Array.isArray(categories)) return null
+    const genre = categories.find(
+      (c: Category & { parent?: Category }) => c.parent && typeof c.parent === 'object' && c.parent.name === '按体裁类型'
+    )
+    return genre ? genre.name : null
   }
 
   return (
@@ -161,22 +175,33 @@ const BrowsePage: React.FC = () => {
         </div>
 
         {loading ? (
-          <div>加载中...</div>
+          <div className="loading-state">加载中...</div>
         ) : !mediaPage || mediaPage.content.length === 0 ? (
-          <div>没有找到符合条件的作品。</div>
+          <div className="empty-state">
+            <span className="empty-icon">📭</span>
+            <p>没有找到符合条件的作品</p>
+            <p className="empty-hint">尝试调整筛选条件，或前往"资料录入"添加新内容</p>
+          </div>
         ) : (
           <>
             <div className="media-grid">
-              {mediaPage.content.map((m) => (
-                <Link key={m.id} to={`/media/${m.id}`} className="media-card">
-                  <MediaCover media={m} />
-                  <div className="media-body">
-                    <h3>{m.title}</h3>
-                    {m.region && <p className="media-meta">地域：{m.region}</p>}
-                    {m.performers && <p className="media-meta">传承人：{m.performers}</p>}
-                  </div>
-                </Link>
-              ))}
+              {mediaPage.content.map((m) => {
+                const genre = getGenreFromMedia(m)
+                return (
+                  <Link key={m.id} to={`/media/${m.id}`} className="media-card">
+                    <MediaCover media={m} />
+                    <div className="media-body">
+                      <h3>{m.title}</h3>
+                      <div className="media-tags-row">
+                        <span className="media-type-tag">{typeLabels[m.type] || m.type}</span>
+                        {genre && <span className="media-genre-tag">{genre}</span>}
+                      </div>
+                      {m.region && <p className="media-meta">📍 {m.region}</p>}
+                      {m.performers && <p className="media-meta">🎤 {m.performers}</p>}
+                    </div>
+                  </Link>
+                )
+              })}
             </div>
             {mediaPage.totalPages > 1 && (
               <div className="pagination">

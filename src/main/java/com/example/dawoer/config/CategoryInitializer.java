@@ -21,8 +21,8 @@ public class CategoryInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         // 检查核心分类是否存在，如果不存在则初始化
-        boolean needsInit = !categoryRepository.findByName("按习俗场合").isPresent() 
-                && !categoryRepository.findByName("按曲种类型").isPresent()
+        boolean needsInit = !categoryRepository.findByName("按体裁类型").isPresent() 
+                && !categoryRepository.findByName("按习俗场合").isPresent()
                 && !categoryRepository.findByName("按乐器").isPresent();
 
         if (!needsInit) {
@@ -32,7 +32,14 @@ public class CategoryInitializer implements CommandLineRunner {
 
         log.info("开始初始化达斡尔族传统音乐分类体系...");
 
-        // 1. 按习俗场合
+        // 1. 按体裁类型（与论文三大核心体裁对应）
+        Category genreType = createCategoryIfNotExists("按体裁类型", null);
+        createCategoryIfNotExists("扎恩达勒（山野民歌）", genreType);
+        createCategoryIfNotExists("乌钦（叙事长诗）", genreType);
+        createCategoryIfNotExists("鲁日格勒（民间歌舞）", genreType);
+        createCategoryIfNotExists("未分类体裁", genreType);
+
+        // 2. 按习俗场合
         Category customOccasion = createCategoryIfNotExists("按习俗场合", null);
         createCategoryIfNotExists("婚礼", customOccasion);
         createCategoryIfNotExists("葬礼", customOccasion);
@@ -40,12 +47,6 @@ public class CategoryInitializer implements CommandLineRunner {
         createCategoryIfNotExists("节庆（如那达慕）", customOccasion);
         createCategoryIfNotExists("劳动（狩猎、农耕）", customOccasion);
         createCategoryIfNotExists("儿童成长/摇篮曲", customOccasion);
-
-        // 2. 按曲种类型
-        Category genreType = createCategoryIfNotExists("按曲种类型", null);
-        createCategoryIfNotExists("叙事民歌（如《德莫日根》）", genreType);
-        createCategoryIfNotExists("仪式歌曲（《扎恩达勒》《哈肯麦》）", genreType);
-        createCategoryIfNotExists("舞蹈音乐", genreType);
 
         // 3. 按乐器
         Category instrument = createCategoryIfNotExists("按乐器", null);
